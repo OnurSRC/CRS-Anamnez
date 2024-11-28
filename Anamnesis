@@ -1,0 +1,333 @@
+import React, { useState } from 'react';
+import { Card, CardHeader, CardContent } from '@/components/ui/card';
+import { AlertCircle, FileText } from 'lucide-react';
+
+const AnamnesisForm = () => {
+  // Form bölümleri için state
+  const [activeSection, setActiveSection] = useState(0);
+  const [formData, setFormData] = useState({
+    // Demografik Bilgiler
+    childName: '',
+    birthDate: '',
+    age: '',
+    gender: '',
+    schoolGrade: '',
+    
+    // Başvuru Nedeni
+    mainComplaints: '',
+    complaintsStart: '',
+    triggerEvents: '',
+    previousTreatments: '',
+    
+    // Aile Öyküsü
+    familyHistory: '',
+    parentMaritalStatus: '',
+    siblings: '',
+    familyMentalHealth: '',
+    
+    // Gelişim Öyküsü
+    pregnancy: '',
+    birth: '',
+    developmental: '',
+    firstWords: '',
+    walking: '',
+    toilet: '',
+    
+    // Tıbbi Öykü
+    medicalHistory: '',
+    medications: '',
+    allergies: '',
+    hospitalizations: '',
+    
+    // Eğitim ve Sosyal Öykü
+    schoolPerformance: '',
+    friendships: '',
+    hobbies: '',
+    behavioralIssues: ''
+  });
+
+  // Form bölümleri
+  const sections = [
+    {
+      title: 'Demografik Bilgiler',
+      fields: [
+        { name: 'childName', label: 'Çocuğun Adı Soyadı', type: 'text' },
+        { name: 'birthDate', label: 'Doğum Tarihi', type: 'date' },
+        { name: 'age', label: 'Yaş', type: 'number' },
+        { name: 'gender', label: 'Cinsiyet', type: 'select', options: ['Kız', 'Erkek'] },
+        { name: 'schoolGrade', label: 'Okul/Sınıf', type: 'text' }
+      ]
+    },
+    {
+      title: 'Başvuru Nedeni',
+      fields: [
+        { name: 'mainComplaints', label: 'Ana Şikayetler', type: 'textarea' },
+        { name: 'complaintsStart', label: 'Şikayetlerin Başlangıcı', type: 'textarea' },
+        { name: 'triggerEvents', label: 'Tetikleyici Olaylar', type: 'textarea' },
+        { name: 'previousTreatments', label: 'Önceki Tedaviler', type: 'textarea' }
+      ]
+    },
+    {
+      title: 'Aile Öyküsü',
+      fields: [
+        { name: 'familyHistory', label: 'Aile Yapısı ve Yaşam Koşulları', type: 'textarea' },
+        { name: 'parentMaritalStatus', label: 'Ebeveyn Medeni Durumu', type: 'select', 
+          options: ['Evli', 'Boşanmış', 'Ayrı', 'Diğer'] },
+        { name: 'siblings', label: 'Kardeşler', type: 'textarea' },
+        { name: 'familyMentalHealth', label: 'Ailede Ruhsal Hastalık Öyküsü', type: 'textarea' }
+      ]
+    },
+    {
+      title: 'Gelişim Öyküsü',
+      fields: [
+        { name: 'pregnancy', label: 'Gebelik Dönemi', type: 'textarea' },
+        { name: 'birth', label: 'Doğum Öyküsü', type: 'textarea' },
+        { name: 'developmental', label: 'Gelişim Basamakları', type: 'textarea' },
+        { name: 'firstWords', label: 'İlk Kelimeler (Ay)', type: 'number' },
+        { name: 'walking', label: 'Yürüme (Ay)', type: 'number' },
+        { name: 'toilet', label: 'Tuvalet Eğitimi (Ay)', type: 'number' }
+      ]
+    },
+    {
+      title: 'Tıbbi Öykü',
+      fields: [
+        { name: 'medicalHistory', label: 'Geçmiş Hastalıklar', type: 'textarea' },
+        { name: 'medications', label: 'Kullanılan İlaçlar', type: 'textarea' },
+        { name: 'allergies', label: 'Alerjiler', type: 'textarea' },
+        { name: 'hospitalizations', label: 'Hastane Yatışları', type: 'textarea' }
+      ]
+    },
+    {
+      title: 'Eğitim ve Sosyal Öykü',
+      fields: [
+        { name: 'schoolPerformance', label: 'Okul Başarısı', type: 'textarea' },
+        { name: 'friendships', label: 'Arkadaş İlişkileri', type: 'textarea' },
+        { name: 'hobbies', label: 'İlgi Alanları ve Hobiler', type: 'textarea' },
+        { name: 'behavioralIssues', label: 'Davranış Sorunları', type: 'textarea' }
+      ]
+    }
+  ];
+
+  // Form verilerini güncelleme fonksiyonu
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  // Rapor oluşturma fonksiyonu
+  const generateReport = () => {
+    const today = new Date().toLocaleDateString('tr-TR');
+    const report = `
+ÇOCUK PSİKİYATRİSİ ANAMNEZ RAPORU
+Tarih: ${today}
+
+DEMOGRAFİK BİLGİLER
+-----------------
+Hastanın Adı Soyadı: ${formData.childName}
+Doğum Tarihi: ${formData.birthDate}
+Yaş: ${formData.age}
+Cinsiyet: ${formData.gender}
+Okul/Sınıf: ${formData.schoolGrade}
+
+BAŞVURU NEDENİ
+-------------
+Ana Şikayetler: ${formData.mainComplaints}
+Şikayetlerin Başlangıcı: ${formData.complaintsStart}
+Tetikleyici Olaylar: ${formData.triggerEvents}
+Önceki Tedaviler: ${formData.previousTreatments}
+
+AİLE ÖYKÜSÜ
+----------
+Aile Yapısı ve Yaşam Koşulları: ${formData.familyHistory}
+Ebeveyn Medeni Durumu: ${formData.parentMaritalStatus}
+Kardeşler: ${formData.siblings}
+Ailede Ruhsal Hastalık Öyküsü: ${formData.familyMentalHealth}
+
+GELİŞİM ÖYKÜSÜ
+-------------
+Gebelik Dönemi: ${formData.pregnancy}
+Doğum Öyküsü: ${formData.birth}
+Gelişim Basamakları: ${formData.developmental}
+İlk Kelimeler: ${formData.firstWords} ay
+Yürüme: ${formData.walking} ay
+Tuvalet Eğitimi: ${formData.toilet} ay
+
+TIBBİ ÖYKÜ
+---------
+Geçmiş Hastalıklar: ${formData.medicalHistory}
+Kullanılan İlaçlar: ${formData.medications}
+Alerjiler: ${formData.allergies}
+Hastane Yatışları: ${formData.hospitalizations}
+
+EĞİTİM VE SOSYAL ÖYKÜ
+-------------------
+Okul Başarısı: ${formData.schoolPerformance}
+Arkadaş İlişkileri: ${formData.friendships}
+İlgi Alanları ve Hobiler: ${formData.hobbies}
+Davranış Sorunları: ${formData.behavioralIssues}
+    `.trim();
+
+    return report;
+  };
+
+  // Form gönderme ve rapor indirme fonksiyonu
+  const downloadReport = () => {
+    try {
+      const report = generateReport();
+      const fileName = `${formData.childName || 'hasta'}_anamnez_raporu_${new Date().toISOString().split('T')[0]}.txt`;
+      
+      // Rapor metnini UTF-8 kodlamasıyla bir Blob nesnesine dönüştürme
+      const blob = new Blob([report], { type: 'text/plain;charset=utf-8' });
+      
+      // Blob için URL oluşturma
+      const url = window.URL.createObjectURL(blob);
+      
+      // Görünmez bir indirme bağlantısı oluşturma
+      const link = document.createElement('a');
+      link.style.display = 'none';
+      link.href = url;
+      link.download = fileName;
+      
+      // Bağlantıyı DOM'a ekleme ve tıklama olayını tetikleme
+      document.body.appendChild(link);
+      link.click();
+      
+      // Temizlik işlemleri
+      setTimeout(() => {
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      }, 100);
+    } catch (error) {
+      console.error('Rapor indirme hatası:', error);
+      alert('Rapor oluşturulurken bir hata oluştu. Lütfen tekrar deneyin.');
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    downloadReport();
+  };
+
+  // Bir sonraki bölüme geçme
+  const nextSection = () => {
+    if (activeSection < sections.length - 1) {
+      setActiveSection(prev => prev + 1);
+    }
+  };
+
+  // Önceki bölüme dönme
+  const previousSection = () => {
+    if (activeSection > 0) {
+      setActiveSection(prev => prev - 1);
+    }
+  };
+
+  return (
+    <div className="max-w-4xl mx-auto p-4">
+      <Card>
+        <CardHeader>
+          <div className="flex items-center space-x-2">
+            <AlertCircle className="w-6 h-6 text-blue-500" />
+            <h1 className="text-2xl font-bold text-gray-800">
+              Çocuk Psikiyatrisi Anamnez Formu
+            </h1>
+          </div>
+          <div className="mt-2">
+            <div className="flex justify-between mb-2">
+              {sections.map((section, index) => (
+                <div
+                  key={index}
+                  className={`h-2 flex-1 mx-1 rounded ${
+                    index <= activeSection ? 'bg-blue-500' : 'bg-gray-200'
+                  }`}
+                />
+              ))}
+            </div>
+            <p className="text-lg font-medium text-gray-600">
+              {sections[activeSection].title}
+            </p>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {sections[activeSection].fields.map((field, index) => (
+              <div key={index} className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  {field.label}
+                </label>
+                {field.type === 'select' ? (
+                  <select
+                    name={field.name}
+                    value={formData[field.name]}
+                    onChange={handleInputChange}
+                    className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="">Seçiniz</option>
+                    {field.options.map((option, i) => (
+                      <option key={i} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+                ) : field.type === 'textarea' ? (
+                  <textarea
+                    name={field.name}
+                    value={formData[field.name]}
+                    onChange={handleInputChange}
+                    rows={4}
+                    className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  />
+                ) : (
+                  <input
+                    type={field.type}
+                    name={field.name}
+                    value={formData[field.name]}
+                    onChange={handleInputChange}
+                    className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  />
+                )}
+              </div>
+            ))}
+            
+            <div className="flex justify-between pt-4">
+              <button
+                type="button"
+                onClick={previousSection}
+                disabled={activeSection === 0}
+                className={`px-4 py-2 rounded ${
+                  activeSection === 0
+                    ? 'bg-gray-300 cursor-not-allowed'
+                    : 'bg-blue-500 hover:bg-blue-600 text-white'
+                }`}
+              >
+                Önceki
+              </button>
+              
+              {activeSection === sections.length - 1 ? (
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+                >
+                  Formu Tamamla ve Rapor İndir
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={nextSection}
+                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                >
+                  Sonraki
+                </button>
+              )}
+            </div>
+          </form>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+export default AnamnesisForm;
